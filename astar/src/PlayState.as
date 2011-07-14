@@ -9,18 +9,25 @@ package
 		private const ROWS : Number = 15;
 		private const COLS : Number = 20;
 		
+		private var start : FlxSprite;
+		private var end : Player;
+		
 		override public function create():void
 		{
 			FlxG.bgColor = 0xffaaaaaa;
 			
 			this.generateMaze();
+			this.addPlayers();
 		}
 		
 		override public function update():void
 		{
 			super.update();
 			if (FlxG.keys.justPressed("SPACE"))
+			{
 				this.generateMaze();
+				this.addPlayers();
+			}
 		}
 				
 		private function generateMaze() : void
@@ -64,6 +71,36 @@ package
 			maze = new FlxTilemap();
 			maze.loadMap(FlxTilemap.arrayToCSV(data, 20), FlxTilemap.ImgAuto, 0, 0, FlxTilemap.AUTO);
 			add(maze);
+		}
+		
+		private function addPlayers():void
+		{
+			// Find the first empty block in the bottom left of the map
+			for (var j : int = ROWS - 1; j > 0; j--)
+			{
+				for (var i : int = 0; i < COLS; i++)
+				{
+					trace("Tile {" + i + ", " + j + "} = " + maze.getTile(i, j));
+					if (maze.getTile(i, j) == 0)
+					{
+						//start = new Player(i * COLS, j * ROWS, CELL_SIZE, 0x00ff00);
+						//add(start);
+						if (!start)
+						{
+							start = new FlxSprite(i * CELL_SIZE, j * CELL_SIZE);
+							start.makeGraphic(CELL_SIZE, CELL_SIZE, 0xff00ff00);
+							add(start);
+						}
+						else
+						{
+							start.x = i * CELL_SIZE;
+							start.y = j * CELL_SIZE;
+						}
+						return;
+					}
+					//FlxG.collide(
+				}
+			}
 		}
 	}
 }
